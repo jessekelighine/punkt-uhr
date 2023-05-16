@@ -1,14 +1,14 @@
 # Punkt Uhr
 
 <p align="center">
-<img width="300" src="resources/demo.png" alt="uhr">
+<img width=250 src="resources/demo.png" alt="uhr"/>
 </p>
 
-I make a clock in a piece of art work from [Anna Kövecses](https://anna-kovecses.com/) move!
+I make a clock in a piece of artwork from [Anna Kövecses](https://anna-kovecses.com/) move!
 Well, sort of.
-It's a [piece art work](https://anna-kovecses.com/Punkt) for a Swiss company
-that depicts a sunny-side-up egg with its yolk being a clock.
-I wrote a simple script that re-generates the art work with any specified time.
+It's [an illustration](https://anna-kovecses.com/Punkt) for a Swiss company
+that depicts a sunny-side-up egg with its yolk as a clock.
+I wrote a simple script that re-generates the illustration with any given time.
 
 To generate a picture, use
 ```bash
