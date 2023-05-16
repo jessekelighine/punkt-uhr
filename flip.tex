@@ -1,0 +1,68 @@
+\documentclass{standalone}
+%-----------------------------------------------------------------------------%
+%%% Color %%%
+\usepackage[dvipsnames]{xcolor} % \textcolor{red}{}
+\definecolor{gelbe}{RGB}{226,152,52}
+\definecolor{weiss}{RGB}{234,213,181}
+\definecolor{orang}{RGB}{214,94,42}
+%-----------------------------------------------------------------------------%
+%%% TikZ %%%
+\usepackage{tikz}
+\usetikzlibrary{calc}
+%-----------------------------------------------------------------------------%
+\newcommand*{\nowhour}{HOUR}
+\newcommand*{\nowminute}{MINUTE}
+\newcommand*{\nowsecond}{SECOND}
+%-----------------------------------------------------------------------------%
+
+\begin{document}
+
+\begin{tikzpicture}[thick]
+	%% Background
+	\path[fill=gelbe] (0,0) circle (1);
+	%% Ticks
+	\newcommand{\tickslength}{0.76}
+	\foreach \x in {0,30,...,330}{ \path (0,0) -- (\x:\tickslength) node[fill=weiss,circle,scale=0.23]{}; }
+	\foreach \x in {0,90,180,270} { \draw[weiss,line width=1mm,line cap=round] (\x:\tickslength+0.05) -- (\x:\tickslength-0.1); }
+	\node[fill=weiss,circle,scale=0.2] at (-0.45,0) {};
+	%% Center
+	\path[fill=weiss] (0,0) circle (0.09);
+	%% Pointers
+	\begin{scope}[xscale=-1]
+		%% Hour
+		\pgfmathparse{add(add(multiply(\nowhour,30),multiply(divide(\nowminute,60),30)),multiply(divide(\nowsecond,3600),30))}
+		\begin{scope}[rotate around={\pgfmathresult:(0,0)}] 
+			\newcommand*{\hourlength}{0.55}
+			\newcommand*{\hourbase}{0.3}
+			\draw[line width=0.75mm,weiss,line cap=round] (0,0) -- (0,\hourlength);
+			\draw[line width=0.47mm,black,line cap=round] (0,\hourbase) -- (0,\hourlength);
+		\end{scope}
+		%% Mintute
+		\pgfmathparse{add(multiply(\nowminute,6),multiply(divide(\nowsecond,60),6))}
+		\begin{scope}[line cap=round,rotate around={\pgfmathresult:(0,0)}]
+			\newcommand*{\minutelength}{0.65}
+			\newcommand*{\minutebase}{0.35}
+			\draw[line width=0.7mm,weiss] (0,0) -- (0,\minutelength);
+			\draw[line width=0.42mm,black] (0,\minutebase) -- (0,\minutelength);
+		\end{scope}
+		%% Second
+		\pgfmathparse{multiply(\nowsecond,6)}
+		\begin{scope}[rotate around={\pgfmathresult:(0,0)}]
+			\newcommand*{\secondlength}{\tickslength}
+			\newcommand*{\secondpercent}{0.8}
+			\newcommand*{\secondbasewidth}{0.025}
+			\newcommand*{\secondtipwidth}{0.008}
+			\path[fill=orang] ($(0,0)+(-\secondbasewidth,0)$)
+			-- ($(0,\secondlength)+(-\secondtipwidth,0)$)
+			-- ($(0,\secondlength)+(\secondtipwidth,0)$)
+			-- ($(0,0)+(\secondbasewidth,0)$) --cycle;
+			\path[fill=black] ($($(0,0)+(-\secondbasewidth,0)$)!\secondpercent!($(0,\secondlength)+(-\secondtipwidth,0)$)$)
+			-- ($(0,\secondlength)+(-\secondtipwidth,0)$) -- ($(0,\secondlength)+(\secondtipwidth,0)$)
+			-- ($($(0,0)+(\secondbasewidth,0)$)!\secondpercent!($(0,\secondlength)+(\secondtipwidth,0)$)$) --cycle;
+		\end{scope}
+	\end{scope}
+	%% Center
+	\path[fill=gelbe] (0,0) circle (0.06);
+\end{tikzpicture}
+
+\end{document}

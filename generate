@@ -1,0 +1,46 @@
+#!/bin/bash
+
+orig_file="flip.tex"
+temp_name=".temp-flip-$(date +"%Y%m%d%H%M%S")"
+background="resources/background.jpg"
+output_dir="output"
+
+[[ $# -lt 1 ]] && { echo "usage: $0 [time OO-OO-OO]" >&2 ; exit 0 ; }
+
+### Generate Clock Face #######################################################
+
+hr=$(echo "$1" | cut -d '-' -f 1 | xargs printf '%g')
+mn=$(echo "$1" | cut -d '-' -f 2 | xargs printf '%g')
+sd=$(echo "$1" | cut -d '-' -f 3 | xargs printf '%g')
+
+file_name="$(printf '%02g' "$hr")-$(printf '%02g' "$mn")-$(printf '%02g' "$sd")"
+temp_file_name=".temp-$file_name-$(date +"%Y%m%d%H%M%S")"
+
+cp "$orig_file" "$temp_name.tex"
+sed -i '' "s/HOUR/$hr/g"   "$temp_name.tex"
+sed -i '' "s/MINUTE/$mn/g" "$temp_name.tex"
+sed -i '' "s/SECOND/$sd/g" "$temp_name.tex"
+
+latexmk -pdflatex -quiet "$temp_name.tex" &> /dev/null
+mv "$temp_name.pdf" "$temp_file_name.pdf"
+
+latexmk -C "$temp_name" &> /dev/null
+rm "$temp_name.tex"
+
+### Convert Clock Face and Superimpose on Background ##########################
+
+[[ ! -d "$output_dir" ]] && mkdir "$output_dir"
+
+# convert -density 1000 -scale 95% "$temp_file_name.pdf" "$temp_file_name.png"
+gs -dBATCH -dNOPAUSE -sDEVICE=pngalpha -sOutputFile="$temp_file_name.png" -r1000 "$temp_file_name.pdf" &> /dev/null
+convert -scale 95% "$temp_file_name.png" "$temp_file_name.png"
+convert \
+	-page +0+0 "$background" \
+	-page +1150+800 "$temp_file_name.png" \
+	-background none -layers merge +repage \
+	"$output_dir/$file_name.jpg"
+rm "$temp_file_name.png"
+rm "$temp_file_name.pdf"
+
+echo "$(tput bold && tput setaf 11)$(basename $0)$(tput sgr0): Finished!"
+exit 0

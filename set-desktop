@@ -1,0 +1,30 @@
+#!/bin/bash
+
+path="output"
+time=$(date +"%H-%M-%S")
+file="$(realpath "$path")/$time.jpg"
+
+[[ -n $1 ]] && {
+	hr=$(echo "$1" | cut -d '-' -f 1 | xargs printf '%g')
+	mn=$(echo "$1" | cut -d '-' -f 2 | xargs printf '%g')
+	sd=$(echo "$1" | cut -d '-' -f 3 | xargs printf '%g')
+	time="$(printf '%02g' "$hr")-$(printf '%02g' "$mn")-$(printf '%02g' "$sd")"
+	file="$(realpath "$path")/$time.jpg"
+}
+
+[[ ! -f $file ]] && {
+	echo "$(tput bold)$(basename $0)$(tput sgr0): file '$file' does not exist, generating..."
+	./generate "$time" &> /dev/null
+}
+
+osascript \
+	-e 'tell application "System Events"' \
+	-e "tell every desktop to set picture to file \"$file\" as POSIX file" \
+	-e 'end tell'
+
+# osascript \
+# 	-e 'tell application "System Events"' \
+# 	-e 'tell every desktop' \
+# 	-e 'set picture rotation to 0' \
+# 	-e 'end tell' \
+# 	-e 'end tell'
