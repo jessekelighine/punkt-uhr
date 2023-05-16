@@ -1,15 +1,17 @@
 # Punkt Uhr
 
+<p aling="center">
 <img
-    src="resources/demo.png"
-    alt="uhr"
-    style="
-        width: 0 auto;
-        width: 15em;
-        display: block;
-        margin-right: auto;
-        margin-left: auto;"
+src="resources/demo.png"
+alt="uhr"
+style="
+width: 0 auto;
+width: 15em;
+display: block;
+margin-right: auto;
+margin-left: auto;"
 />
+</p>
 
 I make a clock in a piece of art work from [Anna Kövecses](https://anna-kovecses.com/) move!
 Well, sort of.
