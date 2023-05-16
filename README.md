@@ -1,6 +1,6 @@
 # Punkt Uhr
 
-<p aling="center">
+<p align="center">
 <img width="300" src="resources/demo.png" alt="uhr">
 </p>
 
